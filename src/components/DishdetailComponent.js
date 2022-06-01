@@ -4,37 +4,48 @@ import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Link } from "react-router-dom";
 import {Loading} from "./LoadingComponent";
 import {baseUrl} from '../shared/basrUrl';
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
 function RenderDish(dishDetail) {
   return (
-    <Card>
-      <CardImg top src={baseUrl + dishDetail.image} alt={dishDetail.name} />
-      <CardBody>
-        <CardTitle>{dishDetail.name}</CardTitle>
-        <CardText>{dishDetail.description}</CardText>
-      </CardBody>
-    </Card>
+    <div className="col-12 col-md-5 m-1">
+       <FadeTransform in transformProps={{
+            exitTransform: 'scale(0.5) translateY(-50%)'
+        }}>
+          <Card>
+            <CardImg top src={baseUrl + dishDetail.image} alt={dishDetail.name} />
+            <CardBody>
+              <CardTitle>{dishDetail.name}</CardTitle>
+              <CardText>{dishDetail.description}</CardText>
+            </CardBody>
+          </Card>
+        </FadeTransform>
+    </div>
   );
 }
 
 function RenderComments({comments, postComment, dishId}) {
-  let commentList = comments.comments.map((comment, i) => (
-    <li key={i} className="commentList">
-      {comment.comment}
-      <br />
-      <br />
-      -- {comment.author},
-      {new Intl.DateTimeFormat("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "2-digit"
-      }).format(new Date(Date.parse(comment.date)))}
-      <br />
-      <br />
-    </li>
-  ));
-  commentList.push(<CommentForm dishId = {dishId} postComment={postComment} ></CommentForm>);
-  return commentList;
+  if(comments != null){
+    return(
+      <div className="col-12 col-md-5 m-1">
+        <h4>Comments</h4>
+        <ul className="list-unstyled">
+          <Stagger in>
+          {comments.map((comment) => {
+            return(
+              <Fade in>
+                <li key={comment.id}>
+                  <p>{comment.comment}</p>
+                  <p>-- {comment.author},</p>
+                </li>
+              </Fade>
+            );
+          } )}
+          </Stagger>
+        </ul>
+      </div>
+    );
+  }
 }
 const DishDetail = props => {
   if(props.isLoading) {
