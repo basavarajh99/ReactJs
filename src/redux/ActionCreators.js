@@ -1,6 +1,5 @@
 import * as ActionTypes from "./ActionTypes";
 import { baseUrl } from "../shared/baseUrl";
-import { actions } from "react-redux-form";
 
 /* FORM FEEDBACK */
 
